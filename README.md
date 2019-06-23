@@ -6,3 +6,5 @@ This program depends on the GNU coreutils, cURL, dpkg and dmenu.
 ## Licensing
 You can license this program under the terms of the
 [MPL2](https://www.mozilla.org/en-US/MPL/2.0/).
+## Installing
+You can simply install this with netsh: `netsh -c chrissxYT/LiKeU`
