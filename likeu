@@ -3,13 +3,21 @@
 dmenuheight=20
 rurl="https://kernel.ubuntu.com/~kernel-ppa/mainline/"
 
-kurl=$(curl -sSL "$rurl" | grep tr | grep "[DIR]" | sed "s/>/\n/g" | sed "s/</\n/g" | grep "a href" | sed "s/\"/\n/g" | grep ^v | tac -)
-[ "$1" = "-l" ] && kurl=$(echo "$kurl" | sed 1q) || kurl=$(echo "$kurl" | dmenu -l "$dmenuheight")
+kurl=$(curl -sSL "$rurl" | grep tr | grep "[DIR]" | sed "s/>/\n/g" | \
+        sed "s/</\n/g" | grep "a href" | sed "s/\"/\n/g" | grep ^v | tac -)
+[ "$1" = "-l" ] \
+        && kurl=$(echo "$kurl" | sed 1q) \
+        || kurl=$(echo "$kurl" | dmenu -l "$dmenuheight")
+[ "$kurl" = "" ] && exit 0
 kurl=$rurl$kurl
 
-raw=$(curl -sSL "$kurl" | grep deb | sed "s/</\n/g" | sed "s/>/\n/g" | sed "s/\"/\n/g")
+raw=$(curl -sSL "$kurl" | grep deb | sed "s/</\n/g" | sed "s/>/\n/g" | \
+        sed "s/\"/\n/g")
 
-udpkg "$kurl$(echo "$raw" | grep amd64 | grep linux-modules- | grep generic | sed 1q)"
+udpkg "$kurl$(echo "$raw" | grep amd64 | grep linux-modules- | \
+        grep generic | sed 1q)"
 udpkg "$kurl$(echo "$raw" | grep all | grep linux-headers- | sed 1q)"
-udpkg "$kurl$(echo "$raw" | grep amd64 | grep linux-headers- | grep generic | sed 1q)"
-udpkg "$kurl$(echo "$raw" | grep amd64 | grep linux-image-unsigned- | grep generic | sed 1q)"
+udpkg "$kurl$(echo "$raw" | grep amd64 | grep linux-headers- | \
+        grep generic | sed 1q)"
+udpkg "$kurl$(echo "$raw" | grep amd64 | grep linux-image-unsigned- \
+        | grep generic | sed 1q)"
