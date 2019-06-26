@@ -3,16 +3,14 @@
 dmenuheight=20
 rurl="https://kernel.ubuntu.com/~kernel-ppa/mainline/"
 
-kurl=$(curl -sSL "$rurl" | grep tr | grep "[DIR]" | sed "s/>/\n/g" | \
-        sed "s/</\n/g" | grep "a href" | sed "s/\"/\n/g" | grep ^v | tac -)
+kurl=$(curl -sSL "$rurl" | sed "s/\"/\n/g" | grep ^v | tac -)
 [ "$1" = "-l" ] \
         && kurl=$(echo "$kurl" | sed 1q) \
         || kurl=$(echo "$kurl" | dmenu -l "$dmenuheight")
 [ "$kurl" = "" ] && exit 0
 kurl=$rurl$kurl
 
-raw=$(curl -sSL "$kurl" | grep deb | sed "s/</\n/g" | sed "s/>/\n/g" | \
-        sed "s/\"/\n/g")
+raw=$(curl -sSL "$kurl" | sed "s/\"/\n/g" | grep deb | grep -v "<")
 
 udpkg "$kurl$(echo "$raw" | grep amd64 | grep linux-modules- | \
         grep generic | sed 1q)"
