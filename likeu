@@ -1,21 +1,22 @@
 #!/bin/sh
 
-dmenuheight=20
+h=20
 rurl="https://kernel.ubuntu.com/~kernel-ppa/mainline/"
 
 kurl=$(curl -sSL "$rurl" | sed "s/\"/\n/g" | grep ^v | tac -)
-[ "$1" = "-l" ] \
-        && kurl=$(echo "$kurl" | sed 1q) \
-        || kurl=$(echo "$kurl" | dmenu -l "$dmenuheight")
-[ "$kurl" = "" ] && exit 0
-kurl=$rurl$kurl
+[ "$1"  = "-l" ] &&kurl=$rurl$(echo "$kurl" | sed 1q)
+[ "$1" != "-l" ] &&kurl=$rurl$(echo "$kurl" | dmenu -l "$h" || exit 0)
 
-raw=$(curl -sSL "$kurl" | sed "s/\"/\n/g" | grep deb | grep -v "<")
+raw=$(curl -sSL "$kurl")
 
-udpkg "$kurl$(echo "$raw" | grep amd64 | grep linux-modules- | \
-        grep generic | sed 1q)"
+[ echo "$raw" | grep "Build for amd64 failed" ] && \
+        echo "This kernel's build failed for amd64!" &&
+        exit 1
+
+raw=$(echo "$raw" | sed "s/\"/\n/g" | grep deb | grep -v "<")
+araw=$(echo "$raw" | grep amd64 | grep generic)
+
+udpkg "$kurl$(echo "$araw" | grep linux-modules- | sed 1q)"
 udpkg "$kurl$(echo "$raw" | grep all | grep linux-headers- | sed 1q)"
-udpkg "$kurl$(echo "$raw" | grep amd64 | grep linux-headers- | \
-        grep generic | sed 1q)"
-udpkg "$kurl$(echo "$raw" | grep amd64 | grep linux-image-unsigned- \
-        | grep generic | sed 1q)"
+udpkg "$kurl$(echo "$araw" | grep linux-headers- | sed 1q)"
+udpkg "$kurl$(echo "$araw" | grep linux-image-unsigned-  sed 1q)"
