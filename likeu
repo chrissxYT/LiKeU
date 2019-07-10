@@ -9,7 +9,7 @@ kurl=$(curl -sSL "$rurl" | sed "s/\"/\n/g" | grep ^v | tac -)
 
 raw=$(curl -sSL "$kurl")
 
-[ echo "$raw" | grep "Build for amd64 failed" ] && \
+echo "$raw" | grep "Build for amd64 failed" > /dev/null && \
         echo "This kernel's build failed for amd64!" &&
         exit 1
 
