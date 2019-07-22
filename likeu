@@ -3,7 +3,7 @@
 h=20
 rurl="https://kernel.ubuntu.com/~kernel-ppa/mainline/"
 
-kurl=$(curl -sSL "$rurl" | sed "s/\"/\n/g" | grep ^v | tac -)
+kurl=$(curl -sSL "$rurl" | sed "s/\"/\n/g" | grep ^v | sed "s/-rc/.0rc/g" | sort | sed "s/.0rc/-rc/g" | tac -)
 [ "$1"  = "-l" ] &&kurl=$rurl$(echo "$kurl" | sed 1q)
 [ "$1" != "-l" ] &&kurl=$rurl$(echo "$kurl" | dmenu -l "$h" || exit 0)
 
