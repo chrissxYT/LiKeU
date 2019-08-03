@@ -3,3 +3,5 @@ install:
 
 all:
 	@./install
+
+.PHONY: all install
