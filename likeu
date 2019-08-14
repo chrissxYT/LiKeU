@@ -1,15 +1,12 @@
 #!/bin/sh
 
 h=20
-rurl="https://kernel.ubuntu.com/~kernel-ppa/mainline/"
+url="https://kernel.ubuntu.com/~kernel-ppa/mainline/"
 
-kurl=$(curl -sSL "$rurl" | sed "s/\"/\n/g" | grep ^v | \
-        sed 's/-rc/.0rc/g' | \
-        sed 's/\./.00/g' | \
-        sort | \
-        sed 's/\.00/./g' | sed 's/.0rc/-rc/g' | tac -)
-if [ "$1" = "-l" ] ; then kurl=$rurl$(echo "$kurl" | sed 1q)
-else kurl=$rurl$(echo "$kurl" | dmenu -l "$h") || exit 0 ; fi
+kurl=$(curl -sSL "$url" | sed 's/\"/\n/g' | grep ^v | sed 's/^v\(.*\)\/$/\1/' | sort -V | awk '{print "v" $0 "/" }' | tac -)
+echo "$kurl"
+if [ "$1" = "-l" ] ; then kurl=$url$(echo "$kurl" | sed 1q)
+else kurl=$url$(echo "$kurl" | dmenu -l "$h") || exit 0 ; fi
 
 raw=$(curl -sSL "$kurl")
 
