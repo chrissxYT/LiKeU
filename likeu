@@ -1,11 +1,11 @@
 #!/bin/sh
 
-h=20
+selector="dmenu -l 20"
 url="https://kernel.ubuntu.com/~kernel-ppa/mainline/"
 
 kurl=$(curl -sSL "$url" | sed 's/\"/\n/g' | grep ^v | sed 's/^v\(.*\)\/$/\1.00/' | sort -V | sed 's/\.00//' | awk '{print "v" $0 "/" }' | tac -)
 if [ "$1" = "-l" ] ; then kurl=$url$(echo "$kurl" | sed 1q)
-else kurl=$url$(echo "$kurl" | dmenu -l "$h") || exit 0 ; fi
+else kurl=$url$(echo "$kurl" | $selector) || exit 0 ; fi
 
 raw=$(curl -sSL "$kurl")
 
