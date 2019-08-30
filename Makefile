@@ -1,7 +1,7 @@
 install:
-	@./install
+	sudo cp -f likeu /usr/bin/likeu
 
 all:
-	@./install
+	sudo cp -f likeu /usr/bin/likeu
 
 .PHONY: all install

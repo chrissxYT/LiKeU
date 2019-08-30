@@ -9,4 +9,4 @@ You can license this program under the terms of the
 [MPL2](https://www.mozilla.org/en-US/MPL/2.0/).
 ## Installing
 You can simply install this with netsh:
-`netsh -C ./install -c chrissxYT/LiKeU`
+`netsh -C make -c chrissxYT/LiKeU`
