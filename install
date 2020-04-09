@@ -1,2 +1,0 @@
-#!/bin/sh
-sudo cp -f likeu /usr/bin/likeu
